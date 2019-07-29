@@ -1,6 +1,6 @@
-package com.example.demo;
+package com.example.demo.security;
 
-import com.example.demo.Role;
+import com.example.demo.security.Role;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.persistence.*;

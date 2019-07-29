@@ -1,5 +1,8 @@
-package com.example.demo;
+package com.example.demo.security;
 
+import com.example.demo.security.RoleRepository;
+import com.example.demo.security.User;
+import com.example.demo.security.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -51,6 +54,8 @@ public class UserService {
         User user = userRepository.findByUsername(currentusername);
         return user;
     }
+
+
 }
 
 

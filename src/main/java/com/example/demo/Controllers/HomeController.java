@@ -1,7 +1,9 @@
-package com.example.demo;
+package com.example.demo.Controllers;
 
+import com.example.demo.security.User;
+import com.example.demo.security.UserRepository;
+import com.example.demo.security.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -36,11 +38,11 @@ public class HomeController {
         // return resistration;
     }
 
-        @RequestMapping("/")
-  public String index()
-   {
-       return "index";
-    }
+//        @RequestMapping("/")
+//  public String index()
+//   {
+//       return "index";
+//    }
     @RequestMapping("/login")
     public String login(){
         return "login";
@@ -51,7 +53,6 @@ public class HomeController {
         model.addAttribute("user", userRepository.findByUsername(username));
         return "secure";
     }
-
 
 
 }

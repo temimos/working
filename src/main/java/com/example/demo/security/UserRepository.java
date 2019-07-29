@@ -1,5 +1,6 @@
-package com.example.demo;
+package com.example.demo.security;
 
+import com.example.demo.security.User;
 import org.springframework.data.repository.CrudRepository;
 
 public interface UserRepository extends CrudRepository <User, Long> {
