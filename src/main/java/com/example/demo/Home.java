@@ -16,10 +16,12 @@ public class Home {
 
     private String title;
 
-    @DateTimeFormat(pattern = "dd MMM yyyy, hh:mm a")
-    private LocalDateTime postedDateTime;
 
     private String content;
+
+
+    @DateTimeFormat(pattern = "dd MMM yyyy, hh:mm a")
+    private LocalDateTime postedDateTime;
 
     private String pic;
 
