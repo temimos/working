@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="base::header">
+    <title>List</title>
+</head>
+
+<body>
+<div th:replace="base::nav"></div>
+<div class="container">
+    <div class="jumbotron lead text-center">
+        <h2> Blog Post </h2>
+    </div>
+    <form action="#" method="post" th:action="@{/check}">
+        <span sec:authorize="hasAuthority('ADMIN')">
+             <button class="btn btn-link" type="submit">Delete Selected</button>
+        </span>
+
+        <table class="table table-hover table-striped" style="width:100%">
+            <thead class="thead-light">
+            <tr>
+                <th sec:authorize="hasAuthority('ADMIN')">Select</th>
+                <th>Title</th>
+                <!--            <th>Content</th>-->
+                <th>Posted Date</th>
+                <th>Posted By</th>
+                <th>Picture</th>
+                <th sec:authorize="isAuthenticated()">Actions</th>
+            </tr>
+            </thead>
+
+            <tr th:each="home   : ${homes}" th:object="${home}">
+                <td sec:authorize="hasAuthority('ADMIN')">
+                    <input name="check" th:value="${home.id}" type="checkbox">
+                </td>
+                <td>
+                    <a th:href="@{/detail/{id}(id=*{id})}" th:text="*{title}"></a>
+                </td>
+
+                <td>
+                    <span th:text="${#temporals.format(home.postedDateTime, 'dd MMM yyyy, hh:mm a')}"></span>
+                </td>
+
+                <td>
+                    <strong>
+                        <a th:href="@{/user/{id}(id=*{user.id})}">[[*{user.firstName}]]</a>
+                    </strong>
+                </td>
+
+
+
+
+<!--                <td>--> 
+<!--                <img src="http://gravatar.com/avatar/afd87b3415ef623a1a0337c2b2171949?s=60" alt="Pic of me!"/>-->
+<!--                </td>-->
+
+<td>
+    <img th:src="${home.user.gravatarURL()}"/>
+<!--                <img id="gravatar"-->
+<!--                     th:src="${'home.user.getGravatar()'}">-->
+                </td>
+                <td sec:authorize="isAuthenticated()">
+                    <div sec:authorize="hasAuthority('USER')">
+                     <span th:if="${user_id == home.user.id}">
+                <a th:href="@{/update/{id}(id=${home.id})}">Edit</a>
+                <a th:href="@{/delete/{id}(id=${home.id})}">Delete</a>
+                    </span>
+                    </div>
+                    <div sec:authorize="hasAuthority('ADMIN')">
+                        <a th:href="@{/update/{id}(id=${home.id})}">edit</a> -
+                        <a th:href="@{/delete/{id}(id=${home.id})}">Delete</a>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+<br/>
+<div th:replace="base::footer"></div>
+</body>
+</html>

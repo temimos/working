@@ -22,7 +22,37 @@ public class HomeController {
     UserRepository userRepository;
 
     @Autowired
-    UserService userService;
+     UserService userService;
+
+//    @RequestMapping("/login")
+//    public String login() {
+//        return "login";
+//    }
+//
+//    @PostMapping("/forgot-password")
+//    public String forgetPassword() {
+//        return "/";
+//    }
+//    @RequestMapping(value = "/register", method= RequestMethod.GET)
+//    public String showRegistrationPage(Model model){
+//        model.addAttribute("user",new User());
+//        return "registration";
+//    }
+//
+//    @PostMapping(value="/register")
+//    public String processRegistrationPage(@Valid @ModelAttribute("user") User user, BindingResult result, Model model) {
+//        model.addAttribute("user", user);
+//        if(result.hasErrors())
+//        {
+//            return "registration";
+//        } else {
+//            userService.saveUser(user);
+//            model.addAttribute("message", "User Account Created");
+//        }
+//        return "index";
+//        // return resistration;
+//    }
+
 
     @RequestMapping("/login")
     public String login() {
@@ -38,20 +68,133 @@ public class HomeController {
     public String showRegistrationPage(Model model) {
         model.addAttribute("page_title", "New User Registration");
         model.addAttribute("user", new User());
-        return "registration";
+        return "register";
     }
-    @PostMapping(value="/register")
-    public String processRegistrationPage(@Valid @ModelAttribute("user") User user, BindingResult result, Model model) {
-        model.addAttribute("user", user);
-        if(result.hasErrors())
-        {
-            return "registration";
-        } else {
-            userService.saveUser(user);
-            model.addAttribute("message", "User Account Created");
-        }
-        return "redirect:/";
 
+    @PostMapping("/register")
+    public String processRegistrationPage(@Valid @ModelAttribute("user") User user,
+                                          BindingResult result,
+                                          Model model/*,
+                                          @RequestParam("password") String password*/
+    ) {
+        model.addAttribute("page_title", "Update Profile");
+        if (result.hasErrors()) {
+            return "register";
+        } else {
+            //Update User and Admin
+            boolean isUser = userRepository.findById(user.getId()).isPresent();
+            if (isUser) {
+                //updating with existed username
+                if (userRepository.findByUsername(user.getUsername()) != null &&
+                        //current user
+                        !userRepository.findByUsername(user.getUsername()).equals(user)) {
+                    model.addAttribute("message",
+                            "We already have a username called " + user.getUsername() + "!" + " Try something else.");
+                    return "register";
+                }
+
+                User userInDB = userRepository.findById(user.getId()).get();
+                userInDB.setFirstName(user.getFirstName());
+                userInDB.setLastName(user.getLastName());
+                userInDB.setEmail(user.getEmail());
+                userInDB.setUsername(user.getUsername());
+                userInDB.setPassword(userService.encode(user.getPassword()));
+                userInDB.setEnabled(true);
+                userRepository.save(userInDB);
+                model.addAttribute("message", "User Account Successfully Updated");
+            }
+            //New User
+            else {
+                //Registering with existed username
+                if (userRepository.findByUsername(user.getUsername()) != null) {
+                    model.addAttribute("message",
+                            "We already have a username called " + user.getUsername() + "!" + " Try something else.");
+                    return "register";
+                } else {
+                    user.setPassword(userService.encode(user.getPassword()));
+                    userService.saveUser(user);
+                    model.addAttribute("message", "User Account Successfully Created");
+                }
+            }
+        }
+        return "login";
+    }
+
+    @GetMapping("/termsandconditions")
+    public String getTermsAndCondition() {
+        return "termsandconditions";
+    }
+
+//    @RequestMapping("/updateUser")
+//    public String viewUser(Model model,
+//                           HttpServletRequest request,
+//                           Authentication authentication,
+//                           Principal principal) {
+//       /* Boolean isAdmin = request.isUserInRole("ADMIN");
+//        Boolean isUser = request.isUserInRole("USER");
+//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();*/
+////        String username = principal.getName();
+//        model.addAttribute("page_title", "Update Profile");
+//        model.addAttribute("user", userService.getUser());
+//        return "register";
+//    }
+
+
+
+
+
+
+
+//    @GetMapping("/register")
+//    public String showRegistrationPage(Model model) {
+//        model.addAttribute("page_title", "New User Registration");
+//        model.addAttribute("user", new User());
+//        return "registration";
+//    }
+//    @PostMapping(value="/register")
+//    public String processRegistrationPage(@Valid @ModelAttribute("user") User user, BindingResult result, Model model) {
+//        model.addAttribute("user", user);
+//        if(result.hasErrors())
+//        {
+//            return "registration";
+//        } else {
+//            boolean isUser = userRepository.findById(user.getId()).isPresent();
+//            if (isUser) {
+//                //updating with existed username
+//                if (userRepository.findByUsername(user.getUsername()) != null &&
+//                        //current user
+//                        !userRepository.findByUsername(user.getUsername()).equals(user)) {
+//                    model.addAttribute("message",
+//                            "We already have a username called " + user.getUsername() + "!" + " Try something else.");
+//                    return "registration";
+//                }
+//
+//                User userInDB = userRepository.findById(user.getId()).get();
+//                userInDB.setFirstName(user.getFirstName());
+//                userInDB.setLastName(user.getLastName());
+//                userInDB.setEmail(user.getEmail());
+//                userInDB.setUsername(user.getUsername());
+//                userInDB.setPassword(userService.encode(user.getPassword()));
+//                userInDB.setEnabled(true);
+//                userRepository.save(userInDB);
+//                model.addAttribute("message", "User Account Successfully Updated");
+//            }
+//            //New User
+//            else {
+//                //Registering with existed username
+//                if (userRepository.findByUsername(user.getUsername()) != null) {
+//                    model.addAttribute("message",
+//                            "We already have a username called " + user.getUsername() + "!" + " Try something else.");
+//                    return "register";
+//                } else {
+//                    user.setPassword(userService.encode(user.getPassword()));
+//                    userService.saveUser(user);
+//                    model.addAttribute("message", "User Account Successfully Created");
+//                }
+//            }
+//        }
+//        return "login";
+//    }
 //    @PostMapping("/register")
 //    public String processRegistrationPage(@Valid @ModelAttribute("user") User user,
 //                                          BindingResult result,
@@ -99,10 +242,10 @@ public class HomeController {
 //            }
 //        }
 //        return "login";
-    }
 
-    @GetMapping("/termsandconditions")
-    public String getTermsAndCondition() {
+
+    @GetMapping("/terms")
+    public String getTerms() {
         return "termsandconditions";
     }
 

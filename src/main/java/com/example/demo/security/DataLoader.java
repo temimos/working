@@ -36,15 +36,15 @@ System.out.println("INSIDE DATALOADER");
         Role adminRole = roleRepository.findByRole("ADMIN");
         Role userRole = roleRepository.findByRole("USER");
 
-        User user = new User("jim@jim.com", "Pa$$word2019", "jim", "jimmerson",true,"jim");
+        User user = new User("kqy@g.gtvtech.com", "Pa$$word2019", "jim", "jimmerson",true,"jim");
         user.setRoles(Arrays.asList(userRole));
         userService.saveUser(user);
-        user = new User("admin@admin.com","Pa$$word2019","Admin","User",true,"admin");
+        user = new User("xdwr@my.qsl.ro","Pa$$word2019","Admin","User",true,"admin");
         user.setRoles(Arrays.asList(adminRole));
         userService.saveUser(user);
 
 
-        User dave = new User("dave45678@gmail.com",
+        User dave = new User("ymu@z.zgrco.com",
                 "password",
                 "David",
                 "Wolf",
@@ -53,7 +53,7 @@ System.out.println("INSIDE DATALOADER");
         dave.setRoles(Arrays.asList(adminRole));
         userService.saveUser(dave);
 
-        User may = new User("may@gmail.com",
+        User may = new User("lpr@s.rv55.com",
                 "password",
                 "May",
                 "Day",

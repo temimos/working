@@ -33,6 +33,7 @@ public class User {
     @Column (name = "username")
     private String username;
 
+
     @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(joinColumns = @JoinColumn(name="user_id"),inverseJoinColumns = @JoinColumn(name="role_id"))
     private Collection<Role> roles;
@@ -46,6 +47,13 @@ public class User {
 
     @ManyToMany(mappedBy = "followings")
     private Set<User> followers;
+
+
+    public String gravatarURL()
+    {
+        return "http://gravatar.com/avatar/afd87b3415ef623a1a0337c2b2171949?s=60";
+    }
+
 
     public User(){
         roles = new HashSet<>();
