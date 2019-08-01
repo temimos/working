@@ -22,7 +22,7 @@ public class User {
     private String password;
 
     @Column (name = "first_name")
-    private String FirstName;
+    private String firstName;
 
     @Column (name = "last_name")
     private String lastName;
@@ -100,11 +100,11 @@ public class User {
     }
 
     public String getFirstName() {
-        return FirstName;
+        return firstName;
     }
 
     public void setFirstName(String firstName) {
-        FirstName = firstName;
+        firstName = firstName;
     }
 
     public String getLastName() {
@@ -139,7 +139,80 @@ public class User {
         this.roles = roles;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
 
+    public Set<User> getUser() {
+        return user;
+    }
 
+    public void setUser(Set<User> user) {
+        this.user = user;
+    }
 
+    public Set<User> getFollowings() {
+        return followings;
+    }
+
+    public void setFollowings(Set<User> followings) {
+        this.followings = followings;
+    }
+
+    public Set<User> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(Set<User> followers) {
+        this.followers = followers;
+    }
+
+    public void addFollower(User follower) {
+        followers.add(follower);
+        follower.followings.add(this);
+    }
+
+    public void removeFollower(User follower) {
+        followers.remove(follower);
+        follower.followings.remove(this);
+    }
+
+    public void addFollowing(User followed) {
+        followings.add(followed);
+        //followed.addFollower(this);
+    }
+
+    public void removeFollowing(User followed) {
+        followings.remove(followed);
+        //followed.removeFollower(this);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", username='" + username + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+
+        User user = (User) o;
+        if (id != user.id) return false;
+        return username.equals(user.username);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + username.hashCode();
+        return result;
+    }
 }
+

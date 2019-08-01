@@ -3,6 +3,8 @@ package com.example.demo.security;
 import com.example.demo.security.User;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.Set;
+
 public interface UserRepository extends CrudRepository <User, Long> {
     User findByUsername(String username);
     User findByEmail(String email);
@@ -10,4 +12,8 @@ public interface UserRepository extends CrudRepository <User, Long> {
     Long countByUsername(String username);
 
 
+    Set<User> findAllByFollowers(User user);
+
+    Set<User> findAllByFollowings(User user);
 }
+
