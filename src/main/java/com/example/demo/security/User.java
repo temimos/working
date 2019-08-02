@@ -34,6 +34,8 @@ public class User {
     private String username;
 
 
+    public String gravatarURL;
+
     @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(joinColumns = @JoinColumn(name="user_id"),inverseJoinColumns = @JoinColumn(name="role_id"))
     private Collection<Role> roles;
@@ -49,10 +51,6 @@ public class User {
     private Set<User> followers;
 
 
-    public String gravatarURL()
-    {
-        return "http://gravatar.com/avatar/afd87b3415ef623a1a0337c2b2171949?s=60";
-    }
 
 
     public User(){
@@ -176,6 +174,14 @@ public class User {
 
     public void setFollowers(Set<User> followers) {
         this.followers = followers;
+    }
+
+    public String getGravatarURL() {
+        return gravatarURL;
+    }
+
+    public void setGravatarURL(String gravatarURL) {
+        this.gravatarURL = gravatarURL;
     }
 
     public void addFollower(User follower) {

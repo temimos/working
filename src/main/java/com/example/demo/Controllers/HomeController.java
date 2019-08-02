@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
+import java.io.*;
+import java.security.*;
 
 @Controller
 public class HomeController {
@@ -34,7 +36,12 @@ public class HomeController {
 
         if (result.hasErrors()) {
             return "registration";
-        } else {
+        }
+        else {
+            String hash = md5Hex(user.getEmail());
+            hash="https://www.gravatar.com/avatar/" + hash;
+            user.setGravatarURL(hash);
+            System.out.println(hash);
             userService.saveUser(user);
             model.addAttribute("message", "User Account Created");
         }
@@ -79,4 +86,23 @@ public class HomeController {
         model.addAttribute("user", userRepository.findByUsername(username));
         return "secure";
     }
-}
+
+    public static String hex(byte[] array) {
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < array.length; ++i) {
+                sb.append(Integer.toHexString((array[i]
+                        & 0xFF) | 0x100).substring(1,3));
+            }
+            return sb.toString();
+        }
+        public static String md5Hex (String message) {
+            try {
+                MessageDigest md =
+                        MessageDigest.getInstance("MD5");
+                return hex (md.digest(message.getBytes("CP1252")));
+            } catch (NoSuchAlgorithmException e) {
+            } catch (UnsupportedEncodingException e) {
+            }
+            return null;
+        }
+    }
