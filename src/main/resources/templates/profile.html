@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org", xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="base::header">
+    <title>profile</title>
+</head>
+
+<body>
+<div th:replace="base::nav"></div>
+<div class="container text-center">
+
+    <div class="jumbotron lead">
+        <h2 th:text="${user.firstName} +' ' +${user.lastName}"></h2>
+    </div>
+    <div sec:authorize="isAuthenticated()" th:if="${user.id != user.id}">
+        <span th:if="${user.isFollowing(user)}">
+                <a class="btn btn-danger" th:href="@{/unfollow/{id}(id=${user.id})}">Unfollow</a>
+        </span>
+        <span th:unless="${user.isFollowing(user)}">
+                <a class="btn btn-success" th:href="@{/follow/{id}(id=${user.id})}">Follow</a>
+        </span>
+    </div>
+
+
+    <div>
+        <strong>
+            <span th:text="${user.username}"></span>
+        </strong><br/>
+        <span th:text="${user.email}"></span>
+        <br/>
+        <img id="gravatar"
+             th:alt="|${user.firstName}  ${user.lastName}|"
+             th:src="@{'http://gravatar.com/avatar/' + ${HASH} + '?s=200'}">
+        <br/>
+    </div>
+</div>
+
+<div th:replace="base::footer"></div>
+</body>
+</html>

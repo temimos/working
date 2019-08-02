@@ -61,14 +61,18 @@ public class User {
         followers = new HashSet<>();
         followings = new HashSet<>();
     }
+
+
+
     public User(String email, String password, String firstName, String lastName, boolean enabled, String username)
     {
         this.setEmail(email);
         this.setPassword(password);
-        this.setFirstName(firstName);
+//        this.setFirstName(firstName);
         this.setLastName(lastName);
         this.setEnabled(enabled);
         this.setUsername(username);
+        this.firstName = firstName;
 
     }
 
@@ -104,8 +108,15 @@ public class User {
     }
 
     public void setFirstName(String firstName) {
-        firstName = firstName;
+        this.firstName = firstName;
     }
+//    public String getFirstName() {
+//        return firstName;
+//    }
+//
+//    public void setFirstName(String firstName) {
+//        firstName = firstName;
+//    }
 
     public String getLastName() {
         return lastName;
@@ -192,7 +203,7 @@ public class User {
         return "User{" +
                 "id=" + id +
                 ", email='" + email + '\'' +
-                ", firstName='" + firstName + '\'' +
+               ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", username='" + username + '\'' +
                 '}';

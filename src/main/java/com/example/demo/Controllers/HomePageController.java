@@ -35,7 +35,7 @@ public class HomePageController {
 CloudinaryConfig cloudc;
 
     @RequestMapping("/")
-    public String listCourses(Model model){
+    public String listHomes(Model model){
         model.addAttribute("homes", homeRepository.findAll());
         if(userService.getUser() != null) {
             model.addAttribute("user_id", userService.getUser().getId());
@@ -52,63 +52,63 @@ CloudinaryConfig cloudc;
         return "homeform";
     }
 
- 
 
-    @PostMapping("/process")
-    public String processActor(@ModelAttribute Home home,
-                               @RequestParam("file") MultipartFile file){
-        if(file.isEmpty()){
-            return "redirect:add/";
-        }
-        try {
-            Map uploadResult = cloudc.upload(file.getBytes(),
-                    ObjectUtils.asMap("resourcetype", "auto"));
-            home.setPic(uploadResult.get("url").toString());
-            homeRepository.save(home);
-        } catch (IOException e){
-            e.printStackTrace();
-            return "redirect:/add";
-        }
-        homeRepository.save(home);
-        return "redirect:/";
-    }
+
 //    @PostMapping("/process")
-//    public String processForm(@Valid @ModelAttribute("home") Home home,
-//                              BindingResult result,
-//                              @RequestParam("file") MultipartFile file,
-//                              Model model) {
-//        model.addAttribute("imageLabel", "Upload Image");
-//        model.addAttribute("user", userService.getUser());
-//        //check for errors on the form
-//        if (result.hasErrors()) {
-//            for (ObjectError e : result.getAllErrors()) {
-//                System.out.println(e);
-//            }
-//            return "homeform";
+//    public String processActor(@ModelAttribute Home home,
+//                               @RequestParam("file") MultipartFile file){
+//        if(file.isEmpty()){
+//            return "redirect:add/";
 //        }
-//
-//        if (!file.isEmpty()) {
-//            try {
-//                Map uploadResult = cloudc.upload(
-//                        file.getBytes(), ObjectUtils.asMap("resourcetype", "auto"));
-//                String url = uploadResult.get("url").toString();
-//                String uploadedName = uploadResult.get("public_id").toString();
-//                String transformedImage = cloudc.createUrl(uploadedName, 150, 150);
-//                home.setPic(transformedImage);
-//                home.setUser(userService.getUser());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                return "redirect:/add";
-//            }
-//        } else {
-//            //if file is empty and there is a picture path then save item
-//            if (home.getPic().isEmpty()) {
-//                return "homeform";
-//            }
+//        try {
+//            Map uploadResult = cloudc.upload(file.getBytes(),
+//                    ObjectUtils.asMap("resourcetype", "auto"));
+//            home.setPic(uploadResult.get("url").toString());
+//            homeRepository.save(home);
+//        } catch (IOException e){
+//            e.printStackTrace();
+//            return "redirect:/add";
 //        }
 //        homeRepository.save(home);
 //        return "redirect:/";
 //    }
+    @PostMapping("/process")
+    public String processForm(@Valid @ModelAttribute("home") Home home,
+                              BindingResult result,
+                              @RequestParam("file") MultipartFile file,
+                              Model model) {
+        model.addAttribute("imageLabel", "Upload Image");
+        model.addAttribute("user", userService.getUser());
+        //check for errors on the form
+        if (result.hasErrors()) {
+            for (ObjectError e : result.getAllErrors()) {
+                System.out.println(e);
+            }
+            return "homeform";
+        }
+
+        if (!file.isEmpty()) {
+            try {
+                Map uploadResult = cloudc.upload(
+                        file.getBytes(), ObjectUtils.asMap("resourcetype", "auto"));
+                String url = uploadResult.get("url").toString();
+                String uploadedName = uploadResult.get("public_id").toString();
+                String transformedImage = cloudc.createUrl(uploadedName, 150, 150);
+                home.setPic(transformedImage);
+                home.setUser(userService.getUser());
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "redirect:/add";
+            }
+        } else {
+            //if file is empty and there is a picture path then save item
+            if (home.getPic().isEmpty()) {
+                return "homeform";
+            }
+        }
+        homeRepository.save(home);
+        return "redirect:/";
+    }
 
     @RequestMapping("/detail/{id}")
     public String showHome(@PathVariable("id") long id, Model model) {

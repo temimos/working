@@ -29,6 +29,12 @@ public class Home {
     private User user;
 
 
+    public String gravatarURL()
+    {
+        return "http://gravatar.com/avatar/afd87b3415ef623a1a0337c2b2171949?s=60";
+    }
+
+
     public Home() {
         pic = "";
         postedDateTime = LocalDateTime.now();

@@ -40,7 +40,12 @@ public class UserService {
                 .collect(Collectors.toSet()));
 //        user.setEnabled(true);
         userRepository.save(user);
+        System.out.println("In user Service");
+        System.out.println(user.getUsername());
+        User u=userRepository.findByUsername(user.getUsername());
+        System.out.println(u.getUsername());
     }
+
 
     public void saveAdmin(User user) {
         user.setRoles(Arrays.asList(roleRepository.findByRole("ADMIN"))

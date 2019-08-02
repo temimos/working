@@ -24,71 +24,34 @@ public class HomeController {
     @Autowired
      UserService userService;
 
+    @GetMapping("/register")
+    public String showRegistrationPage(Model model) {
+        model.addAttribute("user", new User());
+        return "registration";
+    }
+    @PostMapping("/register")
+    public String processRegistrationPage(@Valid @ModelAttribute("user") User user, BindingResult result, Model model) {
+
+        if (result.hasErrors()) {
+            return "registration";
+        } else {
+            userService.saveUser(user);
+            model.addAttribute("message", "User Account Created");
+        }
+        return "redirect:/";
+    }
+
 
     @RequestMapping("/login")
     public String login() {
         return "login";
     }
 
+
+
     @PostMapping("/forgot-password")
     public String forgetPassword() {
         return "/";
-    }
-
-    @GetMapping("/register")
-    public String showRegistrationPage(Model model) {
-        model.addAttribute("page_title", "New User Registration");
-        model.addAttribute("user", new User());
-        return "register";
-    }
-
-    @PostMapping("/register")
-    public String processRegistrationPage(@Valid @ModelAttribute("user") User user,
-                                          BindingResult result,
-                                          Model model/*,
-                                          @RequestParam("password") String password*/
-    ) {
-        model.addAttribute("page_title", "Update Profile");
-        if (result.hasErrors()) {
-            return "register";
-        } else {
-            //Update User and Admin
-            boolean isUser = userRepository.findById(user.getId()).isPresent();
-            if (isUser) {
-                //updating with existed username
-                if (userRepository.findByUsername(user.getUsername()) != null &&
-                        //current user
-                        !userRepository.findByUsername(user.getUsername()).equals(user)) {
-                    model.addAttribute("home",
-                            "We already have a username called " + user.getUsername() + "!" + " Try something else.");
-                    return "register";
-                }
-
-                User userInDB = userRepository.findById(user.getId()).get();
-                userInDB.setFirstName(user.getFirstName());
-                userInDB.setLastName(user.getLastName());
-                userInDB.setEmail(user.getEmail());
-                userInDB.setUsername(user.getUsername());
-                userInDB.setPassword(userService.encode(user.getPassword()));
-                userInDB.setEnabled(true);
-                userRepository.save(userInDB);
-                model.addAttribute("home    ", "User Account Successfully Updated");
-            }
-            //New User
-            else {
-                //Registering with existed username
-                if (userRepository.findByUsername(user.getUsername()) != null) {
-                    model.addAttribute("home",
-                            "We already have a username called " + user.getUsername() + "!" + " Try something else.");
-                    return "register";
-                } else {
-                    user.setPassword(userService.encode(user.getPassword()));
-                    userService.saveUser(user);
-                    model.addAttribute("home", "User Account Successfully Created");
-                }
-            }
-        }
-        return "login";
     }
 
     @GetMapping("/terms")
